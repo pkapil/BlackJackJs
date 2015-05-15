@@ -20,16 +20,13 @@
 		</div>
 		<div class="row">
 			<h4>Scores</h4>
-			<div class="span10">
+			<div class="span12">
 				<div id="scores">
 						<ul>
-								<li>Dealer Score : {{dealerscore}}</li>
-								<li>Player Score : {{playersscore}}</li>
+								<li>Dealer Score : {{dealerscore}}  {{#ifCond dealervirtualscore 0 }}/ {{dealervirtualscore}} {{/ifCond}}</li>
+								<li>Player Score : {{playersscore}}  {{#ifCond playersvirtualscore 0 }}/ {{playersvirtualscore}} {{/ifCond}}</li>
 						</ul>
 				</div>
-			</div>
-			<div class="span2">
-				<span><a id="restart" onClick="window.location.reload()" class="btn btn-warning btn-small"> RESTART GAME </a></span>
 			</div>
 		</div>
 		<div class="row">

@@ -82,11 +82,8 @@ var Game = {
         message.info = (parseInt(this.playersscore()) > 21) ? "Player Busted!" : message.info;
         self.paintgame();
         if (message.info.indexOf("won") > -1 || message.info.indexOf("Busted") > -1) {
-            message.info=message.info+" Please RESTART";
-            self.paintgame(); 
-/*            setTimeout(function() {
-                window.location.reload();
-            }, 1000);*/
+            message.info = message.info + " Please RESTART";
+            self.paintgame();
         }
 
     },
@@ -117,21 +114,23 @@ var Game = {
             self.player.push(self.dealFromDeck());
             self.gameDecision();
             if (parseInt(this.dealerscore()) < 21 && parseInt(this.playersscore())) {
-
-
                 if (confirm('Do u still want to continue? Yes:hit No:Stand')) {
                     self.player.push(self.dealFromDeck());
-                    self.gameDecision();
+
                 } else {
                     self.dealer.push(self.dealFromDeck());
-                    self.gameDecision();
                 }
+                self.gameDecision();
             }
             self.gameDecision();
         });
         $(document).on('click', '#stand', function() {
             message.info = "you choose stand ";
-            self.dealer.push(self.dealFromDeck());
+
+            while (parseInt(self.dealerscore()) < 21) {
+                self.dealer.push(self.dealFromDeck());
+                self.gameDecision();
+            }
             self.gameDecision();
         });
         self.gameDecision();
@@ -160,8 +159,28 @@ var Game = {
     dealerscore: function() {
         return parseInt(this.score(this.dealer));
     },
+    dealervirtualscore: function() {
+        var self = this;
+        var dealervirtualscore = 0;
+        self.dealer.forEach(function(entry, index, Arr) {
+            if (entry.value === "A") {
+                dealervirtualscore = self.score(self.dealer) - 10;
+            }
+        });
+        return dealervirtualscore;
+    },
     playersscore: function() {
         return parseInt(this.score(this.player));
+    },
+    playersvirtualscore: function() {
+        var self = this;
+        var playersvirtualscore = 0;
+        self.player.forEach(function(entry, index, Arr) {
+            if (entry.value === "A") {
+                playersvirtualscore = self.score(self.player) - 10;
+            }
+        });
+        return playersvirtualscore;
     },
     dealerscoredisplay: [],
     playersscoredisplay: [],
@@ -178,6 +197,14 @@ var GameView = {
         $('#mainContainer').html(ctpl(game));
     }
 };
+
+Handlebars.registerHelper('ifCond', function(v1, v2, options) {
+  if(v1 > v2) {
+    return options.fn(this);
+  }
+  return options.inverse(this);
+});
+
 
 var game = Game.init();
 game.start();
