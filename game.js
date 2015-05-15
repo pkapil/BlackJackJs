@@ -5,6 +5,14 @@ var Card = function() {
 
 };
 
+var hand = function() {
+    this.cards = [];
+    return {
+        cards:this.cards;
+    };
+}
+
+
 var Deck = {
     init: function() {
         var valArr = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'A', 'J', 'Q', 'K'];
@@ -48,6 +56,7 @@ var Deck = {
 };
 
 var Game = {
+    dealer1: new hand(),
     dealer: [],
     player: [],
     deck: function() {
@@ -60,6 +69,7 @@ var Game = {
         var self = this;
         var player = self.player;
         var dealer = self.dealer;
+                var dealer1 = self.dealer1;
         var message = self.message;
 
         player.push(self.dealFromDeck());
@@ -74,16 +84,25 @@ var Game = {
     checkwin: function() {
         var self = this;
         var message = self.message;
-        message.styleclass = "text-success";
-        message.info = (parseInt(this.dealerscore()) == 21) ? "Dealer won!" : message.info;
-        message.info = (parseInt(this.playersscore()) == 21) ? "Player won!" : message.info;
-        message.styleclass = "text-error";
-        message.info = (parseInt(this.dealerscore()) > 21) ? "Dealer Busted!" : message.info;
-        message.info = (parseInt(this.playersscore()) > 21) ? "Player Busted!" : message.info;
+        var dealerscore = parseInt(this.dealerscore());
+        var playersscore = parseInt(this.playersscore());
+
+        message.info = (playersscore == dealerscore) ? "Its a push Please RESTART" : message.info;
+
+        message.info = (dealerscore > 21) ? "Dealer Busted!" : message.info;
+        message.info = (playersscore > 21) ? "Player Busted!" : message.info;
+        message.styleclass = message.info.indexOf("Busted") > -1 ? "text-error" : message.styleclass;
+
+        message.info = (dealerscore == 21) ? "Dealer won!" : message.info;
+        message.info = (playersscore == 21) ? "Player won!" : message.info;
+        message.styleclass = message.info.indexOf("won") > -1 ? "text-success" : message.styleclass;
+
+
         self.paintgame();
         if (message.info.indexOf("won") > -1 || message.info.indexOf("Busted") > -1) {
             message.info = message.info + " Please RESTART";
             self.paintgame();
+            return;
         }
 
     },
@@ -103,33 +122,26 @@ var Game = {
     start: function() {
         var self = this;
         var message = self.message;
+
         message.info = "Welcome to Black Jack Game :)!!! ";
         message.styleclass = "text-info";
-        self.gameDecision();
+
         //do u wanna hit or stand?
         $(document).on('click', '#hit', function() {
-            self.message.styleclass = "text-info";
-            message.info = "you choose hit ";
-
+            message.styleclass = "text-info";
+            self.message.info = "You choosed hit!..if you want to hit again go ahead then choose stand later";
             self.player.push(self.dealFromDeck());
-            self.gameDecision();
-            if (parseInt(this.dealerscore()) < 21 && parseInt(this.playersscore())) {
-                if (confirm('Do u still want to continue? Yes:hit No:Stand')) {
-                    self.player.push(self.dealFromDeck());
-
-                } else {
-                    self.dealer.push(self.dealFromDeck());
-                }
-                self.gameDecision();
-            }
             self.gameDecision();
         });
         $(document).on('click', '#stand', function() {
             message.info = "you choose stand ";
-
             while (parseInt(self.dealerscore()) < 21) {
-                self.dealer.push(self.dealFromDeck());
-                self.gameDecision();
+                if (parseInt(self.dealerscore()) < parseInt(self.playersscore())) {
+                    self.dealer.push(self.dealFromDeck());
+                } else {
+                    self.gameDecision();
+                    return;
+                }
             }
             self.gameDecision();
         });
@@ -199,10 +211,10 @@ var GameView = {
 };
 
 Handlebars.registerHelper('ifCond', function(v1, v2, options) {
-  if(v1 > v2) {
-    return options.fn(this);
-  }
-  return options.inverse(this);
+    if (v1 > v2) {
+        return options.fn(this);
+    }
+    return options.inverse(this);
 });
 
 
