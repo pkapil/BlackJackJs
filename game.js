@@ -6,11 +6,40 @@ var Card = function() {
 };
 
 var hand = function() {
+    this.name = '';
     this.cards = [];
-    return {
-        cards:this.cards;
+    this.scoreval = 0;
+    this.virtualscore = 0;
+
+    this.score = function() {
+        var a = 0;
+        this.cards.forEach(function(entry, index, Arr) {
+            var special = ['J', 'Q', 'A', 'K'];
+            switch (entry.value) {
+                case 'J':
+                case 'Q':
+                case 'K':
+                    a += 10;
+                    break;
+                case 'A':
+                    a += 11;
+                    break;
+                default:
+                    a += parseInt(entry.value);
+            }
+        });
+        this.scoreval = a;
+        return a;
     };
-}
+
+    return {
+        name: this.name,
+        cards: this.cards,
+        scoreval: this.scoreval,
+        score: this.score,
+        virtualscore: this.virtualscore
+    };
+};
 
 
 var Deck = {
@@ -56,9 +85,8 @@ var Deck = {
 };
 
 var Game = {
-    dealer1: new hand(),
-    dealer: [],
-    player: [],
+    dealer: new hand(),
+    players: [],
     deck: function() {
         return (typeof(Deck) != "undefined") ? Deck.init() : Deck;
     },
@@ -67,22 +95,39 @@ var Game = {
     },
     init: function() {
         var self = this;
-        var player = self.player;
-        var dealer = self.dealer;
-                var dealer1 = self.dealer1;
-        var message = self.message;
+        self.dealer.name = "Dealer";
+        var dealerCards = self.dealer.cards;
+        var noofplayers = 2;
+        var players = self.players;
+        for (var i = 0; i < noofplayers; i++) {
+            var newplayer = new hand();
+            newplayer.name = "Player" + i;
+            newplayer.cards.push(self.dealFromDeck());
+            newplayer.cards.push(self.dealFromDeck());
+            players.push(newplayer);
+        }
+        dealerCards.push(self.dealFromDeck());
+        dealerCards.push(self.dealFromDeck());
 
+        /*
+
+        var player = self.player;
+        var dealer = self.dealer1.cards;
+        var dealer1 = self.dealer1;
+        var message = self.message;
+        dealer1.cards.push(self.dealFromDeck());
+        dealer1.cards.push(self.dealFromDeck());
         player.push(self.dealFromDeck());
         player.push(self.dealFromDeck());
         dealer.push(self.dealFromDeck());
         dealer.push(self.dealFromDeck());
         dealer.score = self.score;
-        message.mess = JSON.stringify(message);
+        message.mess = JSON.stringify(message);*/
         return this;
     },
 
     checkwin: function() {
-        var self = this;
+        /*        var self = this;
         var message = self.message;
         var dealerscore = parseInt(this.dealerscore());
         var playersscore = parseInt(this.playersscore());
@@ -103,7 +148,7 @@ var Game = {
             message.info = message.info + " Please RESTART";
             self.paintgame();
             return;
-        }
+        }*/
 
     },
 
@@ -148,7 +193,7 @@ var Game = {
         self.gameDecision();
     },
     score: function() {
-        var a = 0;
+        /*        var a = 0;
         arguments[0].forEach(function(entry, index, Arr) {
             var special = ['J', 'Q', 'A', 'K'];
             switch (entry.value) {
@@ -165,37 +210,9 @@ var Game = {
             }
         });
         arguments[0].scoreval = a;
-        return a;
+        return a;*/
     },
 
-    dealerscore: function() {
-        return parseInt(this.score(this.dealer));
-    },
-    dealervirtualscore: function() {
-        var self = this;
-        var dealervirtualscore = 0;
-        self.dealer.forEach(function(entry, index, Arr) {
-            if (entry.value === "A") {
-                dealervirtualscore = self.score(self.dealer) - 10;
-            }
-        });
-        return dealervirtualscore;
-    },
-    playersscore: function() {
-        return parseInt(this.score(this.player));
-    },
-    playersvirtualscore: function() {
-        var self = this;
-        var playersvirtualscore = 0;
-        self.player.forEach(function(entry, index, Arr) {
-            if (entry.value === "A") {
-                playersvirtualscore = self.score(self.player) - 10;
-            }
-        });
-        return playersvirtualscore;
-    },
-    dealerscoredisplay: [],
-    playersscoredisplay: [],
     paintgame: function() {
         var gameview = GameView.paint();
     }

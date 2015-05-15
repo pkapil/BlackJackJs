@@ -37,6 +37,7 @@
 		<div class="row">
 			<h4>Dealer</h4>
 			{{#dealer}}
+			{{#cards}}
 			<div class="span2">
 				<ul>
 						<li id="value">Value:{{value}}</li>
@@ -44,11 +45,13 @@
 						<li id="symbol">Symbol:{{symbol}}</li>
 				</ul>
 			</div>
+			{{/cards}}
 			{{/dealer}}
 		</div>
+		{{#players}}
 		<div class="row">
-			<h4>Player</h4>
-			{{#player}}
+			<h4>{{name}}</h4>
+			{{#cards}}
 			<div class="span2">
 				<ul>
 						<li id="value">Value:{{value}}</li>
@@ -56,8 +59,9 @@
 						<li id="symbol">Symbol:{{symbol}}</li>
 				</ul>
 			</div>
-			{{/player}}
+			{{/cards}}
 		</div>
+		{{/players}}
 		<div class="row">
 			<div class="span4">
 				<div id="controls" style="padding:10px;margin:10px">
