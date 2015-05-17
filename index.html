@@ -6,14 +6,12 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="description" content="Simple BlackJack Game">
 		<meta name="author" content="jmk.kapil">
-		<!-- Le styles -->
 		<link href="css/bootstrap.css" rel="stylesheet">
 		<style>
-		body {
-		padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+		.maincontainer{
+			padding:0px 60px 60px 60px;
 		}
 		</style>
-		<link href="css/bootstrap-responsive.css" rel="stylesheet">
 		<script id="template" type="text/html">
 		<div class="row">
 			<div className="span12">Simple game ..The game is initially loaded with the first set of Cards</div>
@@ -23,22 +21,23 @@
 			<div class="span12">
 				<div id="scores">
 						<ul>
-								<li>Dealer Score : {{dealerscore}}  / {{dealervirtualscore}} </li>
-								<li>Player Score : {{playersscore}}  / {{playersvirtualscore}} </li>
+									{{#dealer}}	<li>Dealer Score : <strong>{{score}}</strong></li>{{/dealer}}
+								{{#players}}<li>{{name}} Score : <strong>{{score}}</strong></li>{{/players}}
 						</ul>
 				</div>
 			</div>
 		</div>
+		{{#messages}}
 		<div class="row">
-			{{#message}}
 			<div class="span12 {{styleclass}} strong" id="message"><b>Message : {{info}}</div>
-			{{/message}}
 		</div>
+		{{/messages}}
+		{{#dealer}}
 		<div class="row">
 			<h4>Dealer</h4>
-			{{#dealer}}
+			<h6>{{infoMessage}}</h6>
 			{{#cards}}
-			<div class="span2">
+			<div class="col-lg-2 col-md-2">
 				<ul>
 						<li id="value">Value:{{value}}</li>
 						<li id="color">Color:{{color}}</li>
@@ -46,13 +45,14 @@
 				</ul>
 			</div>
 			{{/cards}}
-			{{/dealer}}
 		</div>
+		{{/dealer}}
 		{{#players}}
 		<div class="row">
 			<h4>{{name}}</h4>
+			<h6>{{infoMessage}}</h6>
 			{{#cards}}
-			<div class="span2">
+			<div class="col-lg-2 col-md-2">
 				<ul>
 						<li id="value">Value:{{value}}</li>
 						<li id="color">Color:{{color}}</li>
@@ -61,37 +61,39 @@
 			</div>
 			{{/cards}}
 		</div>
-		{{/players}}
 		<div class="row">
 			<div class="span4">
 				<div id="controls" style="padding:10px;margin:10px">
-						<span><a class="btn btn-primary btn-small" id="hit"> HIT </a></span>
-						<span><a class="btn btn-primary btn-small" id="stand"> STAND </a></span>
-						<span><a onClick="window.location.reload()" class="btn btn-warning btn-small"> RESTART GAME </a></span>
+						<span><button class="btn btn-primary btn-xs" id="hit{{id}}" entityid="{{id}}"> HIT </button></span>
+						<span><button class="btn btn-primary btn-xs" id="stand{{id}}" entityid="{{id}}"> STAND </button></span>
+						<span><button onClick="window.location.reload()" class="btn btn-warning btn-xs"> RESTART GAME </button></span>
 				</div>
 			</div>
 		</div>
+		{{/players}}
 		</script>
 	</head>
 	<body>
-		<div class="navbar navbar-inverse navbar-fixed-top">
-			<div class="navbar-inner">
-				<div class="container">
-					<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+		<!-- Static navbar -->
+		<nav class="navbar navbar-default navbar-static-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					</button>
-					<a class="brand" href="#">BlackJack</a>
-					<div class="nav-collapse collapse">
-						<ul class="nav">
-							<li class="active"><a href="//pkapil.com">Home</a></li>
-						</ul>
-						</div><!--/.nav-collapse -->
-					</div>
+					<a class="navbar-brand" href="#">BlackJackJS</a>
 				</div>
-			</div>
-			<div id="mainContainer"class="container">
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="#">Home</a></li>
+					</ul>
+					</div><!--/.nav-collapse -->
+				</div>
+			</nav>
+			<div id="mainContainer"class="container maincontainer">
 				.......Loading
 			</div>
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
