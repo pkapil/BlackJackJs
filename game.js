@@ -29,6 +29,9 @@ var hand = function() {
     this.bustedstatus = 0;
     this.processed = 0;
     this.status = "";
+    this.abc="0";
+    var a ="6";
+
 
     this.score = function() {
         var a = 0;
@@ -51,7 +54,6 @@ var hand = function() {
         return a;
     };
     this.virtualscore = this.score();
-
     return {
         id: this.id,
         name: this.name,
@@ -65,7 +67,8 @@ var hand = function() {
         winstatus: this.winstatus,
         processed: this.processed,
         status: this.status,
-        active: this.active
+        active: this.active,
+        a:a
     };
 };
 
@@ -153,10 +156,11 @@ var Game = {
     init: function() {
         var self = this;
         self.dealer.name = "Dealer";
+        self.dealer.abc="werwer";
         var dealerCards = self.dealer.cards;
         self.dealer.infoMessage = "Game Started!";
         self.dealer.bustedstatus = 0;
-        var noofplayers = 2;
+        var noofplayers = 4;
         var players = self.players;
         for (var i = 0; i < noofplayers; i++) {
             var newplayer = new hand();
@@ -229,7 +233,7 @@ var Game = {
                     dealerCards.push(self.dealFromDeck());
                     if (self.gameDecision() === 0) return 0;
                 }
-            
+
 
 
             }
@@ -362,8 +366,9 @@ function disableAllButtons() {
     $('[id^=stand]').prop("disabled", true);
 };
 
-var game = Game.init();
+
 $(document).ready(function() {
+    window.game = Game.init();
     game.start();
 
 });
